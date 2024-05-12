@@ -1,12 +1,16 @@
-import React, { memo  } from 'react'
+import React, { memo } from 'react'
 
-const Todos = ({ Counter }) => {
+const Todos = ({ todos }) => {
 
 
-    console.log("hello world",Counter);
     return (
-        // <div>{Counter}</div>
-        <div>{Counter.length}</div>
+        Array.isArray(todos) && todos.length > 0 && todos.map((todo, index) => {
+            return (
+                <ul>
+                    <li key={todo.id}>{todo.text}</li>
+                </ul>
+            )
+        })
     )
 }
 
