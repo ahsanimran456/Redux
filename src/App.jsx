@@ -19,6 +19,12 @@ function App() {
         return {
           todos: state.todos.filter(todo => todo.id !== action.payload)
         }
+      case "EDIT_TODO":
+        return {
+          todos: state.todos.map(todo =>
+            todo.id === action.payload.id ? { ...todo, text: action.payload.text } : todo
+          )
+        }
       default:
         return state
     }
@@ -27,11 +33,9 @@ function App() {
   const [state, dispatch] = useReducer(todoReducer, init)
   const [UserInput, setUserInput] = useState("");
 
-
   const HandleOnchange = useCallback((e) => {
     setUserInput(e.target.value)
   }, [])
-
 
   const HandleAddTodo = useCallback(() => {
     if (UserInput.trim() !== '') {
@@ -43,14 +47,17 @@ function App() {
   const HandleDeleteTodo = useCallback((ID) => {
     dispatch({ type: 'DELETE_TODO', payload: ID })
   })
+
+  const HandleEdit = useCallback((ID) => {
+    dispatch({ type: 'EDIT_TODO', payload: ID })
+  })
   const memoizedTodos = useMemo(() => state.todos, [state.todos])
   return (
     <React.Fragment>
       <input type="text" value={UserInput} placeholder='Enter Todo' onChange={HandleOnchange} />
       <button onClick={HandleAddTodo}>Add Todo </button>
-      <Todos todos={memoizedTodos} OnDelete={HandleDeleteTodo} />
+      <Todos todos={memoizedTodos} OnDelete={HandleDeleteTodo} OnEdit={HandleEdit} />
     </React.Fragment>
-
   )
 }
 
