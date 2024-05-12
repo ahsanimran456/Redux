@@ -9,17 +9,16 @@ function App() {
 
   // todoReducer contains current state and action this function will return new state and manage the state ,
   // this function will be called when ever we dispatch an action 
-
   const todoReducer = (state, action) => {
     switch (action.type) {
       case 'ADD_TODO':
         return {
           todos: [...state.todos, action.payload]
         }
-      // case 'DELETE_TODO':
-      //   return {
-      //     todos: state.todos.filter((todo, index) => index !== action.payload)
-      //   }
+      case 'DELETE_TODO':
+        return {
+          todos: state.todos.filter(todo => todo.id !== action.payload)
+        }
       default:
         return state
     }
@@ -41,14 +40,15 @@ function App() {
     }
   }, [UserInput, dispatch])
 
+  const HandleDeleteTodo = useCallback((ID) => {
+    dispatch({ type: 'DELETE_TODO', payload: ID })
+  })
   const memoizedTodos = useMemo(() => state.todos, [state.todos])
   return (
     <React.Fragment>
       <input type="text" value={UserInput} placeholder='Enter Todo' onChange={HandleOnchange} />
       <button onClick={HandleAddTodo}>Add Todo </button>
-
-      <Todos todos={memoizedTodos} />
-
+      <Todos todos={memoizedTodos} OnDelete={HandleDeleteTodo} />
     </React.Fragment>
 
   )
